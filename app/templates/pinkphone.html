@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+<script>
+function play_calling() {
+    calling_audio = document.getElementById('calling_audio');
+
+    for (var count=0; count < 3; count++) {
+        calling_audio.play();
+    }
+};
+</script>
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"
       type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}"
@@ -9,6 +18,23 @@
     <title>Pink Phone</title>
 </head>
 <body>
-
+    <div>
+        <div align="center">
+            <h1>연락처</h1>
+            <br/>
+            <img src="{{ url_for('static', filename='pinkfong.jpg') }}" title="pingfong"
+                 align="center" height="300" width="300">
+            <br/>
+            <br/>
+            <a href="#" onclick="play_calling()">
+            <img src="{{ url_for('static', filename='call.png') }}" title="전화걸기"
+                 align="center" height="200" width="200">
+            </a>
+            <audio id="calling_audio">
+                <source src="{{ url_for('static', filename='calling.wav') }}" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+    </div>
 </body>
 </html>
