@@ -1,14 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <script>
 function play_calling() {
+{% if contents != None %}
     calling_audio = document.getElementById('calling_audio');
-    hello_audio = document.getElementById('hello_audio');
+    calling_audio.play();
+{% endif %}
 
-    for (var count=0; count < 3; count++) {
-        calling_audio.play();
-    }
+    return;
+};
+
+function play_hello() {
+{% if contents != None %}
+    hello_audio = document.getElementById('hello_audio');
     hello_audio.play();
+{% endif %}
+
+    return;
+};
+
+function play_playbook() {
+{% if contents != None %}
+    playbook = document.getElementById('playbook_audio');
+    playbook.play();
+{% endif %}
+
+    return;
+};
+
+function calling() {
+{% if contents != None %}
+    play_calling();
+    {% for interval in contents['calling_list'] %}
+    setTimeout(play_calling, {{ interval }});
+    {% endfor %}
+    setTimeout(play_hello, {{ contents['hello_interval'] }});
+    setTimeout(play_playbook, {{ contents['playbook_interval'] }});
+{% endif %}
+
+    return;
 };
 </script>
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"
@@ -19,7 +49,7 @@ function play_calling() {
     <meta charset="UTF-8">
     <title>Pink Phone</title>
 </head>
-<body>
+<body onload="calling();">
     <div>
         <div align="center">
             <h1>연락처</h1>
@@ -28,18 +58,24 @@ function play_calling() {
                  align="center" height="300" width="300">
             <br/>
             <br/>
-            <a href="#" onclick="play_calling()">
-            <img src="{{ url_for('static', filename='call.png') }}" title="전화걸기"
-                 align="center" height="200" width="200">
+            <a href="/calling">
+                <img src="{{ url_for('static', filename='call.png') }}" title="전화걸기"
+                     align="center" height="200" width="200">
             </a>
+            {% if contents != None %}
             <audio id="calling_audio">
                 <source src="{{ url_for('static', filename='calling.wav') }}" type="audio/wav">
                 Your browser does not support the audio element.
             </audio>
             <audio id="hello_audio">
-                <source src="{{ url_for('static', filename='hello.mp3') }}" type="audio/mpeg">
+                <source src="{{ url_for('static', filename='hello.ogg') }}" type="audio/ogg">
                 Your browser does not support the audio element.
             </audio>
+            <audio id="playbook_audio">
+                <source src="{{ url_for('static', filename=contents['playbook_name']) }}" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+            {% endif %}
         </div>
     </div>
 </body>
